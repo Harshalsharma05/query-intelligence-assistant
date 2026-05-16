@@ -1,4 +1,4 @@
-# Spark Studio Task — Query Intelligence
+# Spark Studios Task — Query Intelligence Platoform Prototype
 
 This repository contains a small Query Intelligence prototype with two main parts:
 
