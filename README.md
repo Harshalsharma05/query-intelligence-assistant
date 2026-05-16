@@ -10,16 +10,6 @@ This repository contains a small Query Intelligence prototype with two main part
 - Backend: `POST /queries` (create & extract) and `GET /queries/{id}` (retrieve). Primary LLM: Anthropic Claude; optional GROQ fallback (configure with `GROQ_API_KEY`/`GROQ_API_URL`). See `backend/README.md` for full details.
 - Frontend: Minimal chat interface (single text input) that POSTs `{ query }` to a proxy route or directly to the backend and renders the structured `extracted` result.
 
-## API Usage
-
-Base URL:
-
-```txt
-http://localhost:8000
-```
-
----
-
 # Endpoints
 
 ## 1. Create & Extract Query
@@ -130,6 +120,83 @@ curl /queries/123e4567-e89b-12d3-a456-426614174000
 
 ![Frontend Chat UI](frontend/public/demo.png)
 
+# Possible Improvements / Future Scope
+
+## 1. Redis Caching Layer
+
+To improve performance and scalability, Redis can be added as a caching layer between the API and the database.
+
+Currently, every query retrieval requires a database lookup. With Redis, frequently accessed queries and extracted results can be stored in memory for much faster access.
+
+This would help in scenarios such as:
+- repeated query searches
+- active user sessions
+- faster API response times
+- reduced database load
+
+### Proposed Flow
+
+```text
+Client Request
+      ↓
+   FastAPI
+      ↓
+Redis Cache (fast retrieval)
+      ↓
+ PostgreSQL Database
+```
+
+### Example Use Cases
+
+- Cache recently processed queries
+- Store temporary session data
+- Cache LLM extraction results
+- Improve performance for repeated requests
+
+This makes the backend more production-ready and scalable for larger workloads.
+
+---
+
+## 2. Semantic Search Over Historical Queries
+
+Currently, queries can only be retrieved using their unique ID.
+
+A future improvement would be to add semantic search using vector embeddings. Instead of exact keyword matching, the system would understand the meaning of user queries and return similar previously stored queries.
+
+### Example
+
+If a user searches:
+
+```text
+EV battery startups in Asia
+```
+
+the system could also return related stored queries such as:
+- lithium battery companies in Southeast Asia
+- energy storage startups
+- electric vehicle battery manufacturers
+
+even if the wording is different.
+
+### Proposed Enhancement
+
+- Generate embeddings for each stored query
+- Store embeddings using a vector database such as:
+  - pgvector
+  - Pinecone
+  - ChromaDB
+- Perform similarity search during retrieval
+
+### Benefits
+
+- smarter query discovery
+- improved research experience
+- related query recommendations
+- better knowledge retrieval across historical searches
+
+This would transform the project from a simple query storage system into a more intelligent research assistant backend.
+
+
 ## Quick setup
 
 1. Backend
@@ -151,4 +218,9 @@ npm install
 npm run dev
 ```
 
-Set `NEXT_PUBLIC_BACKEND_URL` (or `BACKEND_URL`) in the frontend environment if the backend is not at `http://localhost:8000`.
+---
+
+# Author
+
+**Harshal Sharma**  
+Created as part of the **Spark Studios Internship Assignment**.
