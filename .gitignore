@@ -1,0 +1,17 @@
+venv/
+env/
+__pycache__/
+*.py[cod]
+.env
+.env.local
+backend/chroma_db/
+backend/downloads/
+node_modules/
+.next/
+out/
+dist/
+.DS_Store
+.vscode/
+.idea/
+*.log
+Thumbs.db
