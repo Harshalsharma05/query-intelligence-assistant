@@ -5,10 +5,17 @@ This repository contains a small Query Intelligence prototype with two main part
 - `backend/` — FastAPI service that accepts natural-language queries, extracts structured fields (intent, geography, domain, entity_type, keywords, temporal), and stores them in Supabase.
 - `frontend/` — Next.js app with a compact chat-like UI that submits queries and displays the extracted fields.
 
-## Short overview
+## Short Overview
 
-- Backend: `POST /queries` (create & extract) and `GET /queries/{id}` (retrieve). Primary LLM: Anthropic Claude; optional GROQ fallback (configure with `GROQ_API_KEY`/`GROQ_API_URL`). See `backend/README.md` for full details.
-- Frontend: Minimal chat interface (single text input) that POSTs `{ query }` to a proxy route or directly to the backend and renders the structured `extracted` result.
+### Backend
+- Built with FastAPI using `POST /queries` for query extraction and `GET /queries/{id}` for retrieval.
+- Uses Anthropic Claude as the primary LLM with optional GROQ fallback support for structured intelligence extraction.
+- Stores extracted query metadata in Supabase and validates responses using Pydantic models.
+
+### Frontend
+- Minimal chat-style interface for submitting natural language research queries.
+- Sends user queries to the backend API and displays structured extracted results cleanly.
+- Simple and lightweight UI focused on demonstrating the backend workflow end to end.
 
 # Endpoints
 
@@ -116,9 +123,13 @@ curl /queries/123e4567-e89b-12d3-a456-426614174000
 
 ---
 
-# Frontend Preview
+## Frontend Preview
 
 ![Frontend Chat UI](frontend/public/demo.png)
+
+##  Query Metadata Stored in Supabase
+
+![Supabase Query Data](frontend/public/supabase-data.png)
 
 # Possible Improvements / Future Scope
 
