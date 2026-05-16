@@ -128,9 +128,7 @@ curl /queries/123e4567-e89b-12d3-a456-426614174000
 
 # Frontend Preview
 
-```md
-![Frontend UI](frontend/public/demo.png)
-```
+![Frontend Chat UI](frontend/public/demo.png)
 
 ## Quick setup
 
