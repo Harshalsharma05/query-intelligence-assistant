@@ -1,9 +1,10 @@
-# Spark Studios Task — Query Intelligence Platoform Prototype
-
-This repository contains a Query Intelligence prototype built as part of the Spark Studios internship assignment. It has two main parts:
+# Query Intelligence Platform
+ 
+A FastAPI backend that accepts natural-language research queries, extracts structured intelligence via LLM, and persists results in Supabase. Includes a minimal Next.js chat UI.
+<!-- This repository contains a Query Intelligence prototype built as part of the Spark Studios internship assignment. It has two main parts:
 
 - `backend/` — FastAPI service that accepts natural-language queries, extracts structured intelligence fields (intent, geography, domain, entity_type, keywords, temporal), and persists results in Supabase.
-- `frontend/` — Next.js app with a compact chat-style UI that submits queries and displays the extracted fields in a clean, readable format.
+- `frontend/` — Next.js app with a compact chat-style UI that submits queries and displays the extracted fields in a clean, readable format. -->
 
 ## Short Overview
 
