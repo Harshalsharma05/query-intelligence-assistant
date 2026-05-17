@@ -1,21 +1,56 @@
 # Spark Studios Task — Query Intelligence Platoform Prototype
 
-This repository contains a small Query Intelligence prototype with two main parts:
+This repository contains a Query Intelligence prototype built as part of the Spark Studios internship assignment. It has two main parts:
 
-- `backend/` — FastAPI service that accepts natural-language queries, extracts structured fields (intent, geography, domain, entity_type, keywords, temporal), and stores them in Supabase.
-- `frontend/` — Next.js app with a compact chat-like UI that submits queries and displays the extracted fields.
+- `backend/` — FastAPI service that accepts natural-language queries, extracts structured intelligence fields (intent, geography, domain, entity_type, keywords, temporal), and persists results in Supabase.
+- `frontend/` — Next.js app with a compact chat-style UI that submits queries and displays the extracted fields in a clean, readable format.
 
 ## Short Overview
 
 ### Backend
-- Built with FastAPI using `POST /queries` for query extraction and `GET /queries/{id}` for retrieval.
-- Uses Anthropic Claude as the primary LLM with optional GROQ fallback support for structured intelligence extraction.
-- Stores extracted query metadata in Supabase and validates responses using Pydantic models.
+
+- Built with **FastAPI** — `POST /queries` for extraction and persistence, `GET /queries/{id}` for retrieval by UUID.
+- **Modular architecture** across five files: `main.py` (routes), `config.py` (clients), `models.py` (Pydantic schemas), `extraction.py` (LLM orchestration), `database.py` (Supabase helpers), and `rule_extraction.py` (offline fallback).
+- **Three-tier extraction strategy** — the system always returns a result regardless of API key availability:
+  - **Tier 1 — Anthropic Claude** (primary): highest-quality structured extraction via a carefully engineered system prompt.
+  - **Tier 2 — Groq Llama** (secondary): LLM-quality fallback triggered automatically if Claude is unavailable or errors.
+  - **Tier 3 — Rule-based engine** (last resort): pure Python, zero network calls, zero API keys required. Matches against hand-crafted knowledge bases covering 8 intent types, 55+ geographies, 28 industry domains, 12 entity categories, and 15 temporal patterns using regex and longest-match heuristics.
+- Extracted fields are validated with **Pydantic v2** and stored as structured columns in **Supabase**.
 
 ### Frontend
-- Minimal chat-style interface for submitting natural language research queries.
-- Sends user queries to the backend API and displays structured extracted results cleanly.
-- Simple and lightweight UI focused on demonstrating the backend workflow end to end.
+
+- Minimal **Next.js + TypeScript** chat interface for submitting natural-language research queries.
+- Proxies requests through a `/api/queries` route handler to the FastAPI backend and displays all extracted intelligence fields inline in the chat thread.
+- Styled with **Tailwind CSS** — lightweight and focused entirely on demonstrating the backend workflow end to end.
+
+## Folder Structure
+ 
+```
+query-intelligence/
+├── backend/
+│   ├── main.py             # App setup, CORS, route handlers
+│   ├── config.py           # Env vars + client initialisation (Anthropic, Groq, Supabase)
+│   ├── models.py           # Pydantic request / response models
+│   ├── extraction.py       # Three-tier LLM extraction orchestrator
+│   ├── rule_extraction.py  # Rule-based fallback extractor (no network required)
+│   ├── database.py         # Supabase read / write helpers
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── frontend/
+│   ├── app/
+│   │   ├── api/queries/route.ts   # Next.js proxy to backend
+│   │   ├── page.tsx               # Chat UI
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   ├── public/
+│   │   ├── demo.png
+│   │   └── supabase-data.png
+│   ├── package.json
+│   └── tsconfig.json
+│
+└── README.md
+```
 
 # Endpoints
 
@@ -210,7 +245,7 @@ This would transform the project from a simple query storage system into a more 
 
 ## Quick setup
 
-1. Backend
+**Backend**
 
 ```bash
 cd backend
@@ -221,13 +256,23 @@ cp .env.example .env     # or create .env with required keys
 uvicorn main:app --reload --port 8000
 ```
 
-2. Frontend
+**Frontend**
 
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+Interactive API docs at `http://localhost:8000/docs`
+ 
+**Environment variables**
+```env
+ANTHROPIC_API_KEY=sk-ant-...   # optional — Tier 1
+GROQ_API_KEY=gsk_...           # optional — Tier 2
+SUPABASE_URL=https://...
+SUPABASE_KEY=...
+```
+At least one LLM key is recommended; the rule-based engine covers the rest.
 
 ---
 
